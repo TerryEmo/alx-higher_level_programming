@@ -1,4 +1,27 @@
-#!/usr/bin/python3
-for letter in range(97, 123):
-    if chr(letter) is not 'q' and chr(letter) is not 'e':
-        print("{}".format(chr(letter)), end="")
+#include <stdio.h>
+#include <stdlib.h>
+
+/**
+ * Head - Starting Point
+ * Explanation: Using the putcha to output A-Z, a-z
+ * Return: Always 0 (Success)
+ */
+
+int main(void)
+{
+	char ca = 'a';
+	char cA = 'A';
+
+	while (cA <= 'Z')
+	{
+		while (ca <= 'z')
+		{
+			putchar(ca);
+			ca++;
+		}
+		putchar(cA);
+		cA++;
+	}
+	putchar('\n');
+	return (0);
+}

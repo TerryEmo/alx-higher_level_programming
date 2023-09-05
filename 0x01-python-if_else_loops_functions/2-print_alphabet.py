@@ -1,6 +1,22 @@
-#!/usr/bin/python3
-# 2-print_alphabet.py
+#include <stdio.h>
+#include <stdlib.h>
+/**
+ * Head - Starting Point
+ *
+ * Name: Making us of  putchar to output a-z.
+ *
+ * Return: Always 0 (Success)
+ */
 
-"""Print the alphabet in lowercase, not followed by a new line."""
-for letter in range(97, 123):
-    print("{}".format(chr(letter)), end=""
+int main(void)
+{
+	char ch = 'a';
+
+	while (ch <= 'z')
+	{
+		putchar(ch);
+		++ch;
+	}
+	putchar('\n');
+	return (0);
+}
