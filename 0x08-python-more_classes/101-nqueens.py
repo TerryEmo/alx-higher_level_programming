@@ -1,96 +1,46 @@
 #!/usr/bin/python3
-"""Module finds all solutions for N queens problem"""
+""" puzzle queen challenge
+"""
+from sys import argv, exit
 
 
-def solve(queens, size, start):
-    """Recursive function to solve N queens problem
+def place(N, row, col, result):
+    """ place queens recursively """
+    while col < N:
+        if isvalid(row, col, result):
+            result.append([row, col])
+            if row == N-1:
+                print(result)
+                result.pop()
+            else:
+                place(N, row+1, 0, result)
+        col += 1
+    if len(result) > 0:
+        result.pop()
+    return
 
-    Args:
-        queens: number of queens to place
-        size: size of board
 
-    Returns True if valid move, False otherwise
-    """
-    if queens == 0:
-        return True
-    if start[0] >= size or start[1] >= size:
+def isvalid(row, col, result):
+    """ check if the position is valid """
+    diag1 = [l[0]+l[1] for l in result]
+    diag2 = [l[1]-l[0] for l in result]
+    cols = [l[1] for l in result]
+    rows = [l[0] for l in result]
+    if row in rows or col in cols or row+col in diag1 or col-row in diag2:
         return False
-    x = start[0]
-    y = start[1]
-    if board[x][y] == 0 and isValid(x, y, size):
-        board[x][y] = 1
-        if solve(queens - 1, size, (x + 1, 0)):
-            return True
-        board[x][y] = 0
-    return solve(queens, size, (x, y + 1))
-
-#    for x in range(start[0], size):
-#        for y in range(start[1], size):
-#            if board[x][y] == 0 and isValid(x, y, size):
-#                board[x][y] = 1
-#                if solve(queens - 1, size, (x + 1, 0)):
-#                    return True
-#                board[x][y] = 0
-#    return False
-
-
-def isValid(x, y, size):
-    """Returns whether a coordinate is valid and will not be attacked
-
-    Args:
-        x: x coordinate
-        y: y coordinate
-        size: size of board
-
-    Returns True if valid coordinate, False otherwise
-    """
-    for i in range(size):
-        if board[i][y] == 1 or board[x][i] == 1:
-            return False
-        dx = x + i
-        dy = y + i
-        if dx < size and dy < size and board[dx][dy] == 1:
-            return False
-        dx = x - i
-        dy = y - i
-        if dx > 0 and dy > 0 and board[dx][dy] == 1:
-            return False
-
-        for j in range(size):
-            if i + j == x + y and board[i][j] == 1:
-                return False
-            if i - j == x - y and board[i][j] == 1:
-                return False
     return True
 
 if __name__ == "__main__":
-    from sys import argv
-
-    if len(argv) != 2:
+    length = len(argv)
+    if length != 2:
         print("Usage: nqueens N")
         exit(1)
-
-    try:
-        n = int(argv[1])
-    except ValueError:
+    if argv[1].isdigit() is False:
         print("N must be a number")
         exit(1)
-
-    if n < 4:
+    N = int(argv[1])
+    if N < 4:
         print("N must be at least 4")
         exit(1)
-
-    start = (0, 0)
-    while start[1] < n:
-        solutions = []
-        board = [[0 for i in range(n)] for j in range(n)]
-        if solve(n, n, start):
-            for x in range(n):
-                for y in range(n):
-                    if board[x][y] == 1:
-                        solutions.append([x, y])
-            print(solutions)
-            sy = solutions[0][1]
-        else:
-            sy = start[1]
-        start = (0, sy + 1)
+    result = []
+    place(N, 0, 0, result)
