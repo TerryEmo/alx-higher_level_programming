@@ -1,48 +1,40 @@
 #!/usr/bin/python3
-"""Log Parsing Module."""
+"""
+reads stdin line by line and computes metrics
+"""
 import sys
-import contextlib
 
+file_size = 0
+status_tally = {"200": 0, "301": 0, "400": 0, "401": 0,
+                "403": 0, "404": 0, "405": 0, "500": 0}
+i = 0
+try:
+    for line in sys.stdin:
+        tokens = line.split()
+        if len(tokens) >= 2:
+            a = i
+            if tokens[-2] in status_tally:
+                status_tally[tokens[-2]] += 1
+                i += 1
+            try:
+                file_size += int(tokens[-1])
+                if a == i:
+                    i += 1
+            except FileNotFoundError:
+                if a == i:
+                    continue
+        if i % 10 == 0:
+            print("File size: {:d}".format(file_size))
+            for key, value in sorted(status_tally.items()):
+                if value:
+                    print("{:s}: {:d}".format(key, value))
+    print("File size: {:d}".format(file_size))
+    for key, value in sorted(status_tally.items()):
+        if value:
+            print("{:s}: {:d}".format(key, value))
 
-def print_stats(size: int, status_codes: dict):
-    """Prints the metrics.
-
-    Args:
-        size (int): The total read file size so far.
-        status_codes (dict): The status codes.
-    """
-    print(f"File size: {size}")
-    for key in sorted(status_codes):
-        print(f"{key}: {status_codes[key]}")
-
-
-if __name__ == "__main__":
-
-    size = 0
-    count = 0
-    status_codes = {}
-    valid_codes = ['200', '301', '400', '401', '403', '404', '405', '500']
-
-    try:
-        for line in sys.stdin:
-            if count == 10:
-                print_stats(size, status_codes)
-                count = 1
-            else:
-                count += 1
-
-            line = line.split()
-
-            with contextlib.suppress(IndexError, ValueError):
-                size += int(line[-1])
-            with contextlib.suppress(IndexError):
-                if line[-2] in valid_codes:
-                    if status_codes.get(line[-2], -1) == -1:
-                        status_codes[line[-2]] = 1
-                    else:
-                        status_codes[line[-2]] += 1
-        print_stats(size, status_codes)
-
-    except KeyboardInterrupt as k:
-        print_stats(size, status_codes)
-        raise k
+except KeyboardInterrupt:
+    print("File size: {:d}".format(file_size))
+    for key, value in sorted(status_tally.items()):
+        if value:
+            print("{:s}: {:d}".format(key, value))
