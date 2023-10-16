@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-
+# base.py
 """Defines a base model class."""
 import json
 import csv
@@ -7,12 +7,12 @@ import turtle
 
 
 class Base:
-    """Base model.
+    """Represent the base model.
 
-    This Represents the "base" for all other classes in project 0x0C*.
+    Represents the "base" for all other classes in project 0x0C*.
 
-    Private Class Attributes:
-        __nb_object (int): Number of instantiated Bases.
+    Attributes:
+        __nb_objects (int): The number of instantiated Bases.
     """
 
     __nb_objects = 0
@@ -145,8 +145,7 @@ class Base:
                 return [cls.create(**d) for d in list_dicts]
         except IOError:
             return []
-
-    @staticmethod
+ @staticmethod
     def draw(list_rectangles, list_squares):
         """Draw Rectangles and Squares using the turtle module.
 
